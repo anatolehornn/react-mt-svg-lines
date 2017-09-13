@@ -11,7 +11,7 @@ import SvgSpinner from '../components/SvgSpinner'
 import { isMsBrowser } from '../../utils.js'
 
 export default class DemoPage extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -24,11 +24,11 @@ export default class DemoPage extends React.Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.setState({ isIE: isMsBrowser() })
   }
 
-  render () {
+  render() {
     const {
       triggerCheckAnim,
       triggerSigAnim,
@@ -39,119 +39,131 @@ export default class DemoPage extends React.Component {
     } = this.state
 
     return (
-      <div ref={ c => { this._el = c } } style={ styles.wrapper }>
-
-        <a href="https://github.com/moarwick/react-mt-svg-lines" style={ styles.gitHubLink }>
-          { this._renderGithubLogo() }
+      <div
+        ref={c => {
+          this._el = c
+        }}
+        style={styles.wrapper}
+      >
+        <a href="https://github.com/moarwick/react-mt-svg-lines" style={styles.gitHubLink}>
+          {this._renderGithubLogo()}
         </a>
-        <h2 style={ styles.title }>MtSvgLines</h2>
+        <h2 style={styles.title}>MtSvgLines</h2>
 
-        { isIE &&
-          <div style={ styles.ieMessage }>
-            IE/Edge Detected - JS Fallback Mode
-          </div>
-        }
+        {isIE && <div style={styles.ieMessage}>IE/Edge Detected - JS Fallback Mode</div>}
 
-        <div className="row" style={ styles.row }>
-          <div className="column" style={ styles.column }>
-            <MtSvgLines
-              animate={ triggerCheckAnim }
-              jsOnly={ jsOnly }
-            >
+        <div className="row" style={styles.row}>
+          <div className="column" style={styles.column}>
+            <MtSvgLines animate={triggerCheckAnim} jsOnly={jsOnly}>
               <SvgCheckmark />
             </MtSvgLines>
 
-            <div style={ styles.info }>
-              { this._renderTrigger('triggerCheckAnim') }
-              <p style={ styles.props }>
-                <em>default props</em><br/>
-                duration: <strong>1000</strong><br/>
-                stagger: <strong>0</strong><br/>
-                timing: <strong>ease</strong><br/>
-                playback: <strong>forwards</strong><br/>
+            <div style={styles.info}>
+              {this._renderTrigger('triggerCheckAnim')}
+              <p style={styles.props}>
+                <em>default props</em>
+                <br />
+                duration: <strong>1000</strong>
+                <br />
+                stagger: <strong>0</strong>
+                <br />
+                timing: <strong>ease</strong>
+                <br />
+                playback: <strong>forwards</strong>
+                <br />
                 fade: <strong>false</strong>
               </p>
             </div>
           </div>
 
-          <div className="column" style={ styles.column }>
+          <div className="column" style={styles.column}>
             <MtSvgLines
-              animate={ triggerSigAnim }
-              duration={ 2000 }
-              stagger={ 100 }
+              animate={triggerSigAnim}
+              duration={2000}
+              stagger={100}
               timing="linear"
-              jsOnly={ jsOnly }
+              jsOnly={jsOnly}
             >
               <SvgSignature />
             </MtSvgLines>
 
-            <div style={ styles.info }>
-              { this._renderTrigger('triggerSigAnim') }
-              <p style={ styles.props }>
-                duration: <strong>2000</strong><br/>
-                stagger: <strong>100</strong><br/>
+            <div style={styles.info}>
+              {this._renderTrigger('triggerSigAnim')}
+              <p style={styles.props}>
+                duration: <strong>2000</strong>
+                <br />
+                stagger: <strong>100</strong>
+                <br />
                 timing: <strong>linear</strong>
               </p>
             </div>
           </div>
 
-          <div className="column" style={ styles.column }>
+          <div className="column" style={styles.column}>
             <MtSvgLines
-              animate={ triggerChartAnim }
-              duration={ 3000 }
-              stagger={ 50 }
+              animate={triggerChartAnim}
+              duration={3000}
+              stagger={50}
               timing="ease-in"
-              fade={ true }
-              jsOnly={ jsOnly }
+              fade={true}
+              jsOnly={jsOnly}
             >
               <SvgChart />
             </MtSvgLines>
 
-            <div style={ styles.info }>
-              { this._renderTrigger('triggerChartAnim') }
-              <p style={ styles.props }>
-                duration: <strong>3000</strong><br/>
-                stagger: <strong>50</strong><br/>
-                timing: <strong>ease-in</strong><br/>
-                fade: <strong>true</strong><br/>
+            <div style={styles.info}>
+              {this._renderTrigger('triggerChartAnim')}
+              <p style={styles.props}>
+                duration: <strong>3000</strong>
+                <br />
+                stagger: <strong>50</strong>
+                <br />
+                timing: <strong>ease-in</strong>
+                <br />
+                fade: <strong>true</strong>
+                <br />
                 <em>skip path</em>
               </p>
             </div>
           </div>
 
-          <div className="column" style={ styles.column }>
+          <div className="column" style={styles.column}>
             <MtSvgLines
-              animate={ triggerSpinnerAnim }
-              duration={ 1500 }
-              stagger={ 20 }
+              animate={triggerSpinnerAnim}
+              duration={1500}
+              stagger={20}
               timing="linear"
               playback="2 alternate-reverse both"
-              jsOnly={ jsOnly }
+              jsOnly={jsOnly}
             >
               <SvgSpinner />
             </MtSvgLines>
 
-            <div style={ styles.info }>
-              { this._renderTrigger('triggerSpinnerAnim') }
-              <p style={ styles.props }>
-                duration: <strong>1500</strong><br/>
-                stagger: <strong>20</strong><br/>
-                timing: <strong>linear</strong><br/>
+            <div style={styles.info}>
+              {this._renderTrigger('triggerSpinnerAnim')}
+              <p style={styles.props}>
+                duration: <strong>1500</strong>
+                <br />
+                stagger: <strong>20</strong>
+                <br />
+                timing: <strong>linear</strong>
+                <br />
                 playback: <strong>2 alternate-reverse both</strong>
               </p>
             </div>
           </div>
-          <div style={ styles.clear}></div>
+          <div style={styles.clear} />
         </div>
-
       </div>
     )
   }
 
-  _renderGithubLogo () {
+  _renderGithubLogo() {
     return (
       <svg viewBox="0 0 54 54" width="32" height="32">
-        <path fill="#888" d="M26.9,1.9c-13.8,0-25,11.5-25,25.6c0,11.3,7.2,20.9,17.1,24.3
+        <path
+          fill="#888"
+          d="M26.9,1.9c-13.8,0-25,11.5-25,25.6c0,11.3,7.2,20.9,17.1,24.3
           c1.3,0.2,1.7-0.6,1.7-1.2c0-0.6,0-2.2,0-4.4c-7,1.5-8.4-3.4-8.4-3.4c-1.1-3-2.8-3.7-2.8-3.7c-2.3-1.6,0.2-1.6,0.2-1.6
           c2.5,0.2,3.8,2.6,3.8,2.6c2.2,3.9,5.9,2.8,7.3,2.1c0.2-1.7,0.9-2.8,1.6-3.4C16.8,38.2,11,36,11,26.2c0-2.8,1-5.1,2.6-6.9
           c-0.3-0.6-1.1-3.3,0.2-6.8c0,0,2.1-0.7,6.9,2.6c2-0.6,4.1-0.9,6.3-0.9c2.1,0,4.3,0.3,6.3,0.9c4.8-3.3,6.9-2.6,6.9-2.6
@@ -163,19 +175,29 @@ export default class DemoPage extends React.Component {
   }
 
   // button(s) partial
-  _renderTrigger (triggerKey) {
+  _renderTrigger(triggerKey) {
     const buttonsJsx = []
 
     if (!this.state.isIE) {
       buttonsJsx.push(
-        <a key="cssTrigger" style={ { ...styles.animLink, ...styles.animLinkCss } } href="#" onClick={ this._makeClickHandler(triggerKey, false) } >
+        <a
+          key="cssTrigger"
+          style={{ ...styles.animLink, ...styles.animLinkCss }}
+          href="#"
+          onClick={this._makeClickHandler(triggerKey, false)}
+        >
           CSS »
         </a>
       )
     }
 
     buttonsJsx.push(
-      <a key="jsTrigger" style={ styles.animLink } href="#" onClick={ this._makeClickHandler(triggerKey, true) }>
+      <a
+        key="jsTrigger"
+        style={styles.animLink}
+        href="#"
+        onClick={this._makeClickHandler(triggerKey, true)}
+      >
         JS »
       </a>
     )
@@ -184,12 +206,12 @@ export default class DemoPage extends React.Component {
   }
 
   // curried function to generate click handlers with the desired args
-  _makeClickHandler (triggerKey, jsOnly) {
-    return (e) => {
+  _makeClickHandler(triggerKey, jsOnly) {
+    return e => {
       e.preventDefault()
 
       this.setState({
-        [ triggerKey ]: String(Date.now()),
+        [triggerKey]: String(Date.now()),
         jsOnly
       })
     }

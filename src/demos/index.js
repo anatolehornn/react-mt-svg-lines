@@ -4,6 +4,4 @@ import DemoPage from './components/DemoPage'
 
 require('./stylesheet.scss')
 
-ReactDOM.render((
-  <DemoPage />
-), document.getElementById('component'))
+ReactDOM.render(<DemoPage />, document.getElementById('component'))

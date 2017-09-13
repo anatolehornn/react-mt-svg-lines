@@ -5,11 +5,11 @@ import { shortUID, clamp, trimFloat, isMsBrowser } from './utils.js'
 import TWEEN from 'tween.js'
 
 const EASING = {
-  'ease': TWEEN.Easing.Quadratic.InOut,
+  ease: TWEEN.Easing.Quadratic.InOut,
   'ease-in': TWEEN.Easing.Cubic.In,
   'ease-out': TWEEN.Easing.Cubic.Out,
   'ease-in-out': TWEEN.Easing.Cubic.InOut,
-  'linear': TWEEN.Easing.Linear.None,
+  linear: TWEEN.Easing.Linear.None,
   'step-start': TWEEN.Easing.Bounce.In, // not quite the same thing ;)
   'step-end': TWEEN.Easing.Bounce.Out // not quite the same thing ;)
 }
@@ -17,14 +17,16 @@ const EASING = {
 export default class MtSvgLines extends React.Component {
   static propTypes = {
     className: PropTypes.string, // custom CSS class (applied to svg elem)
-    animate: PropTypes.oneOfType([ // external animation trigger
+    animate: PropTypes.oneOfType([
+      // external animation trigger
       PropTypes.string, // - pass a unique string or true to (re)start animation
       PropTypes.number, // - pass a number to specify delay before the animation begins (ms)
       PropTypes.bool // - pass false (or omit) to draw static SVG (no animation)
     ]),
     duration: PropTypes.number, // total anim duration (ms)
     stagger: PropTypes.number, // delay between start times of each path (percentage)
-    timing: React.PropTypes.oneOf([ // easing type
+    timing: React.PropTypes.oneOf([
+      // easing type
       'ease',
       'ease-in',
       'ease-out',
@@ -38,7 +40,7 @@ export default class MtSvgLines extends React.Component {
     callback: PropTypes.func, // callback fn to run when when anim completes
     jsOnly: PropTypes.bool, // apply JS animation, regardless of browser
     children: PropTypes.node
-  };
+  }
 
   // defaults
   static defaultProps = {
@@ -51,9 +53,9 @@ export default class MtSvgLines extends React.Component {
     fade: false,
     callback: () => {},
     jsOnly: false
-  };
+  }
 
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -74,42 +76,54 @@ export default class MtSvgLines extends React.Component {
     this._tweenData = {}
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.animate !== this._lastAnimate) {
       this._lastAnimate = nextProps.animate
       this.setState({ classKey: `mt-${shortUID()}` })
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this._animate()
   }
 
-  componentDidUpdate () {
+  componentDidUpdate() {
     this._animate()
   }
 
-  render () {
+  render() {
     // destruct all component-specific props, so '...rest' can be applied to wrapper <span>
     // eslint-disable-next-line no-unused-vars
-    const { className, animate, duration, stagger, timing, playback, fade, jsOnly, children, callback, ...rest } = this.props
+    const {
+      className,
+      animate,
+      duration,
+      stagger,
+      timing,
+      playback,
+      fade,
+      jsOnly,
+      children,
+      callback,
+      ...rest
+    } = this.props
     const { classKey, css } = this.state
     const isServer = typeof window === 'undefined'
     const isDelayed = typeof animate === 'number' && animate > 0
     const isHidden = animate === 'hide'
-    const opacity = (isServer && isDelayed) || isHidden
-      ? 0.01
-      : 1
+    const opacity = (isServer && isDelayed) || isHidden ? 0.01 : 1
 
     return (
       <span
-        ref={ c => { this._svgWrapper = c } }
-        className={ `${className} ${classKey}` }
-        style={ { opacity } }
-        { ...rest }
+        ref={c => {
+          this._svgWrapper = c
+        }}
+        className={`${className} ${classKey}`}
+        style={{ opacity }}
+        {...rest}
       >
-        <style>{ css }</style>
-        { children }
+        <style>{css}</style>
+        {children}
       </span>
     )
   }
@@ -119,8 +133,10 @@ export default class MtSvgLines extends React.Component {
   /*
    * Main animate handler, called after each render update
    */
-  _animate () {
-    if (typeof window === 'undefined') { return }
+  _animate() {
+    if (typeof window === 'undefined') {
+      return
+    }
 
     const { animate, duration, stagger, timing, playback, jsOnly } = this.props
     const { classKey } = this.state
@@ -141,8 +157,12 @@ export default class MtSvgLines extends React.Component {
       /* ----- JS MODE ----- */
       if (isAnimJS) {
         // parse props for use with Tween.js
-        if (numOfRepeats > 0) { numOfRepeats = numOfRepeats - 1 }
-        if (playback.includes('infinite')) { numOfRepeats = Infinity }
+        if (numOfRepeats > 0) {
+          numOfRepeats = numOfRepeats - 1
+        }
+        if (playback.includes('infinite')) {
+          numOfRepeats = Infinity
+        }
         const isYoYo = playback.includes('alternate')
 
         // acquire path elems and generate to/from data sets
@@ -163,7 +183,7 @@ export default class MtSvgLines extends React.Component {
         // init the tweener..
         const tween = new TWEEN.Tween(this._tweenData)
           .to(this._pathDataTo, duration)
-          .easing(EASING[ timing ])
+          .easing(EASING[timing])
           .repeat(numOfRepeats)
           .yoyo(isYoYo)
           .onUpdate(this._onTweenUpdate)
@@ -176,7 +196,7 @@ export default class MtSvgLines extends React.Component {
           clearTimeout(t)
         }, Math.max(1, startDelay))
 
-      /* ----- CSS MODE ----- */
+        /* ----- CSS MODE ----- */
       } else {
         let css = ''
 
@@ -186,8 +206,9 @@ export default class MtSvgLines extends React.Component {
 
         // 2) calc all timing values
         const staggerMult = clamp(stagger, 0, 100) / 100 // convert pct to 0-1
-        const pathStaggerDelay = (stagger > 0 ? duration / pathQty * staggerMult : 0)
-        const pathDrawDuration = (stagger > 0 ? duration - ((pathStaggerDelay * (pathQty - 1)) * (2 - staggerMult)) : duration)
+        const pathStaggerDelay = stagger > 0 ? duration / pathQty * staggerMult : 0
+        const pathDrawDuration =
+          stagger > 0 ? duration - pathStaggerDelay * (pathQty - 1) * (2 - staggerMult) : duration
 
         // 3) concat generated CSS, one path at a time..
         pathLenghts.forEach((length, index) => {
@@ -198,19 +219,19 @@ export default class MtSvgLines extends React.Component {
         const t = setTimeout(() => {
           clearTimeout(t)
           this._onAnimComplete()
-        }, startDelay + duration * (numOfRepeats))
+        }, startDelay + duration * numOfRepeats)
 
         // set state (re-render)
         this.setState({ css })
       }
 
-    // >>> ONGOING ANIMATION...
+      // >>> ONGOING ANIMATION...
     } else if (this._animStart) {
       /* ----- JS MODE ----- */
       if (isAnimJS) {
         window.requestAnimationFrame(TWEEN.update)
 
-      /* ----- CSS MODE ----- */
+        /* ----- CSS MODE ----- */
       } else {
         // NOTE: nothing to do, browser does its thing...
       }
@@ -236,7 +257,7 @@ export default class MtSvgLines extends React.Component {
   /*
    * Acquire selection of SVG 'path' elems contained within
    */
-  _selectPathElems () {
+  _selectPathElems() {
     const svgEl = this._svgWrapper.getElementsByTagName('svg')[0]
     return svgEl ? svgEl.querySelectorAll('path') : []
   }
@@ -247,14 +268,13 @@ export default class MtSvgLines extends React.Component {
    * The 'from' object values are the paths' lengths
    * The 'to' object values are 0 (unless 'skip' attr is present, then equal path's length)
    */
-  _getPathData (pathElems) {
-    const pathData = { from: {}, to: {} };
-
-    [].forEach.call(pathElems, (pathEl, i) => {
+  _getPathData(pathElems) {
+    const pathData = { from: {}, to: {} }
+    ;[].forEach.call(pathElems, (pathEl, i) => {
       if (!this._hasSkipAttr(pathEl.attributes)) {
         const pathLengh = trimFloat(pathEl.getTotalLength() || 0)
-        pathData.to[ i ] = 0
-        pathData.from[ i ] = pathLengh
+        pathData.to[i] = 0
+        pathData.from[i] = pathLengh
       }
     })
 
@@ -264,13 +284,13 @@ export default class MtSvgLines extends React.Component {
   /*
    * Check path's attributes for data-mt="skip"
    */
-  _hasSkipAttr (attributes) {
+  _hasSkipAttr(attributes) {
     let result = false
 
     // path.attributes is an obj with indexed keys, so we must iterate over them
     // { '0': { name: 'd', value: 'M37.063' }, '1': { name: 'data-mt', value: 'skip' }, ... }
     for (let key in attributes) {
-      const { name, value } = attributes[ key ]
+      const { name, value } = attributes[key]
       if (!result && name === 'data-mt' && value === 'skip') {
         result = true
         break
@@ -283,27 +303,31 @@ export default class MtSvgLines extends React.Component {
   /*
    * Set style.strokeDasharray on all paths in selection, from the provided key-val object
    */
-  _setStrokeDasharray (pathElems, pathData) {
-    [].forEach.call(pathElems, (pathEl, i) => {
-      if (pathData[ i ]) { pathEl.style.strokeDasharray = pathData[ i ] }
+  _setStrokeDasharray(pathElems, pathData) {
+    ;[].forEach.call(pathElems, (pathEl, i) => {
+      if (pathData[i]) {
+        pathEl.style.strokeDasharray = pathData[i]
+      }
     })
   }
 
   /*
    * Set style.strokeDashoffset on all paths in selection, from the provided key-val object
    */
-  _setStrokeDashoffset (pathElems, pathData) {
-    [].forEach.call(pathElems, (pathEl, i) => {
-      if (pathData[ i ]) { pathEl.style.strokeDashoffset = pathData[ i ] }
+  _setStrokeDashoffset(pathElems, pathData) {
+    ;[].forEach.call(pathElems, (pathEl, i) => {
+      if (pathData[i]) {
+        pathEl.style.strokeDashoffset = pathData[i]
+      }
     })
   }
 
   /*
    * Return an array containing lengths of all path elems inside the SVG
    */
-  _getPathLengths () {
+  _getPathLengths() {
     const pathElems = this._selectPathElems()
-    return [].map.call(pathElems, (pathEl) => {
+    return [].map.call(pathElems, pathEl => {
       return this._hasSkipAttr(pathEl.attributes) ? 0 : trimFloat(pathEl.getTotalLength() || 0)
     })
   }
@@ -311,7 +335,7 @@ export default class MtSvgLines extends React.Component {
   /*
    * Return CSS for a single path elem (using classKey and path index as the CSS selector)
    */
-  _getPathCSS (index, length, startDelay, staggerDelay, duration) {
+  _getPathCSS(index, length, startDelay, staggerDelay, duration) {
     const { classKey } = this.state
     const { timing, playback, fade } = this.props
 
